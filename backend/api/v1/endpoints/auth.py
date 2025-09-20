@@ -8,10 +8,10 @@ from backend.core.security import create_access_token
 
 router = APIRouter()
 
+
 @router.post("/login/access-token", response_model=schemas.Token)
 def login_access_token(
-    db: Session = Depends(deps.get_db),
-    form_data: OAuth2PasswordRequestForm = Depends()
+    db: Session = Depends(deps.get_db), form_data: OAuth2PasswordRequestForm = Depends()
 ):
     """
     OAuth2 compatible token login, get an access token for future requests
@@ -28,12 +28,9 @@ def login_access_token(
         "token_type": "bearer",
     }
 
+
 @router.post("/signup", response_model=schemas.User)
-def create_user(
-    *, 
-    db: Session = Depends(deps.get_db),
-    user_in: schemas.UserCreate
-):
+def create_user(*, db: Session = Depends(deps.get_db), user_in: schemas.UserCreate):
     """
     Create new user.
     """

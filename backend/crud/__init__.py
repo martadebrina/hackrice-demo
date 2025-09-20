@@ -1,2 +1,2 @@
 from .user import user
-from .task import task 
+from .task import task

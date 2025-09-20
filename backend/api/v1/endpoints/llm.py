@@ -6,9 +6,11 @@ from backend.api import deps
 
 router = APIRouter()
 
+
 class LLMRequest(BaseModel):
     provider: str
     prompt: str
+
 
 @router.post("/chat")
 def chat(

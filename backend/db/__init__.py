@@ -5,6 +5,7 @@ from .session import engine
 # imported by Alembic
 # from ..models.user import User  # noqa
 
+
 def init_db():
     # Tables are created with Alembic, this is for development only
     Base.metadata.create_all(bind=engine)

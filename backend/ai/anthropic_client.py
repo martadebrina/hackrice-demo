@@ -3,6 +3,7 @@ import anthropic
 from backend.ai.base import LLMProvider
 from backend.core.config import settings
 
+
 class AnthropicClient(LLMProvider):
     def __init__(self):
         self.client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
