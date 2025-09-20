@@ -67,6 +67,13 @@ else:
     db_name = "PeerfectDB"  # fallback default, change as needed
 db = client[db_name]
 
+try:
+    client.admin.command("ping")
+    print("✅ Mongo connected")
+except Exception as e:
+    print("❌ Mongo connect failed:", e)
+    # optionally: raise
+
 # --- Auth0 helper ---
 async def get_userinfo_from_auth0(access_token: str):
     url = f"https://{settings.AUTH0_DOMAIN}/userinfo"

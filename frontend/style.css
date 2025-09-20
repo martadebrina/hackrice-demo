@@ -1,7 +1,7 @@
 /* The body selector targets the entire page */
 body {
   font-family: sans-serif;         /* Sets the font for the whole page */
-  background: #f9f9f9;             /* Light gray background color */
+  background: #b83737;             /* Light gray background color */
   display: flex;                   /* Enables flexbox layout */
   justify-content: center;         /* Centers content horizontally */
   padding: 2rem;                   /* Adds space around the content */
@@ -9,7 +9,7 @@ body {
 
 /* The .container class is applied to the main content box */
 .container {
-  background: white;               /* White background for contrast */
+  background: rgb(169, 54, 54);               /* White background for contrast */
   padding: 2rem;                   /* Adds space inside the box */
   border-radius: 10px;             /* Rounds the corners */
   width: 100%;                     /* Makes the container responsive */
@@ -52,7 +52,7 @@ li {
   display: flex;                  /* Arrange checkbox, text, and button in a row */
   align-items: center;           /* Align items vertically */
   justify-content: space-between;/* Space out the text and delete button */
-  background: #f1f1f1;            /* Light background for each item */
+  background: #e62929;            /* Light background for each item */
   padding: 0.75rem;               /* Inner spacing */
   border-radius: 5px;             /* Rounds the corners */
   margin-bottom: 0.5rem;          /* Adds space between tasks */
