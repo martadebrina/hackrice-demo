@@ -46,6 +46,13 @@ else:
     db_name = "PeerfectDB"  # fallback default, change as needed
 db = client[db_name]
 
+try:
+    client.admin.command("ping")
+    print("✅ Mongo connected")
+except Exception as e:
+    print("❌ Mongo connect failed:", e)
+    # optionally: raise
+
 # --- Auth0 helper ---
 async def get_jwks():
     url = f"https://{settings.AUTH0_DOMAIN}/.well-known/jwks.json"
@@ -53,14 +60,14 @@ async def get_jwks():
         r = await s.get(url)
         r.raise_for_status()
         return r.json()
-
+    
 async def auth_user(req: Request):
     auth = req.headers.get("Authorization", "")
     if not auth.startswith("Bearer "):
         raise HTTPException(401, "Missing token")
     token = auth.split()[1]
 
-    # Get unverified header to find KID
+    # verify token as before
     unverified = jwt.get_unverified_header(token)
     jwks = await get_jwks()
     key = next((k for k in jwks["keys"] if k.get("kid") == unverified.get("kid")), None)
@@ -79,7 +86,27 @@ async def auth_user(req: Request):
         )
     except Exception as e:
         raise HTTPException(401, f"Invalid token: {e}")
-    return payload  # contains email, name, sub, etc.
+
+    # 🔑 if email/name missing, fetch from /userinfo
+    if not payload.get("email") or not payload.get("name"):
+        try:
+            ui = await get_userinfo_from_auth0(token)
+            if ui.get("email"):
+                payload["email"] = ui["email"]
+            if ui.get("name"):
+                payload["name"] = ui["name"]
+        except Exception as e:
+            print("userinfo fetch failed:", e)
+
+    return payload
+
+
+async def get_userinfo_from_auth0(access_token: str):
+    url = f"https://{settings.AUTH0_DOMAIN}/userinfo"
+    async with httpx.AsyncClient(timeout=5) as s:
+        r = await s.get(url, headers={"Authorization": f"Bearer {access_token}"})
+        r.raise_for_status()
+        return r.json()
 
 # --- Health ---
 @app.get("/health")
