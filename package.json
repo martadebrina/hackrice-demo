@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@auth0/auth0-react": "^2.5.0",
     "mongodb": "^6.20.0"
   }
 }

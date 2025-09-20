@@ -1,6 +1,6 @@
 // src/App.jsx
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Hero from "./Components/Hero";
 import HeaderBar from "./Components/HeaderBar";
 import CreateRequest from "./Components/CreateRequest";

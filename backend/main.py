@@ -2,14 +2,13 @@
 from datetime import datetime
 from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from jose import jwt
-import httpx
+from jose import jwt 
 from pymongo import MongoClient
 from bson import ObjectId
 from pathlib import Path
-from dotenv import load_dotenv   # ← add this line
+from dotenv import load_dotenv 
 from pydantic_settings import BaseSettings
-import os
+import httpx
 
 # Always load the .env that sits beside this file
 load_dotenv(dotenv_path=Path(__file__).with_name(".env"))
@@ -30,7 +29,7 @@ settings = Settings()
 app = FastAPI(title="Peerfect API")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # hackathon-friendly
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -68,7 +67,8 @@ async def auth_user(req: Request):
     if not key:
         raise HTTPException(401, "Signing key not found")
 
-    public_key = jwt.construct_rsa_public_key(key)
+    from jose import jwk
+    public_key = jwk.construct(key)
     try:
         payload = jwt.decode(
             token,
