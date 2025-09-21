@@ -10,16 +10,24 @@ import RequestsSection from "./Components/RequestsSection";
 
 // API helpers you already have
 import {
-  fetchMe, fetchOpenRequests, createRequest,
-  acceptRequest, completeRequest,
+  fetchMe,
+  fetchOpenRequests,
+  createRequest,
+  acceptRequest,
+  completeRequest,
 } from "./lib/api";
 
 const API = import.meta.env.VITE_API_URL;
 
 export default function App() {
   const {
-    isAuthenticated, loginWithRedirect, logout, user,
-    getAccessTokenSilently, isLoading, error,
+    isAuthenticated,
+    loginWithRedirect,
+    logout,
+    user,
+    getAccessTokenSilently,
+    isLoading,
+    error,
   } = useAuth0();
 
   const [me, setMe] = useState(null);
@@ -53,7 +61,9 @@ export default function App() {
     (async () => {
       try {
         // warm token first (prevents “token not ready” races on refresh)
-        await getAccessTokenSilently({ audience: import.meta.env.VITE_AUTH0_AUDIENCE });
+        await getAccessTokenSilently({
+          audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+        });
 
         const [meData, openL, accL, compL] = await Promise.all([
           fetchMe(getAccessTokenSilently),
@@ -73,11 +83,19 @@ export default function App() {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [isAuthenticated, isLoading, getAccessTokenSilently]);
 
   if (isLoading) {
-    return <div style={{ maxWidth: 720, margin: "2rem auto", fontFamily: "system-ui" }}>Loading…</div>;
+    return (
+      <div
+        style={{ maxWidth: 720, margin: "2rem auto", fontFamily: "system-ui" }}
+      >
+        Loading…
+      </div>
+    );
   }
 
   if (!isAuthenticated) {

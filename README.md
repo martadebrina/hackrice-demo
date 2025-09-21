@@ -18,15 +18,15 @@ Generative AI tools can be powerful collaborators. Feel free to use them to brai
 
 Here are some resources that you might find helpful for design patterns and inspiration:
 
-*   **Design Patterns:** [Refactoring Guru](https://refactoring.guru/design-patterns)
-*   **Frontend Design Inspiration:** [Awwwards](https://www.awwwards.com/), [Dribbble](https://dribbble.com/)
-*   **Backend Architecture:** [Microservices.io](https://microservices.io/)
+- **Design Patterns:** [Refactoring Guru](https://refactoring.guru/design-patterns)
+- **Frontend Design Inspiration:** [Awwwards](https://www.awwwards.com/), [Dribbble](https://dribbble.com/)
+- **Backend Architecture:** [Microservices.io](https://microservices.io/)
 
 ## Getting Started
 
 To dive into the specifics of the starter code, please refer to the `README.md` files within the following directories:
 
-*   `./backend/`: For details on the backend setup, API structure, and database models.
-*   `./frontend/`: For information on the frontend framework and how to get started with the user interface.
+- `./backend/`: For details on the backend setup, API structure, and database models.
+- `./frontend/`: For information on the frontend framework and how to get started with the user interface.
 
 Happy hacking!

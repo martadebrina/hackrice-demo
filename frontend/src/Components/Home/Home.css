@@ -1,0 +1,125 @@
+:root {
+  --pf-text: rgba(255, 255, 255, 0.92);
+  --pf-muted: rgba(255, 255, 255, 0.65);
+  --pf-primary: #7c9cff;
+}
+
+/* HERO: full-height center, NO background/panel */
+.hero {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 16px;
+  min-height: calc(100vh - 80px); /* room for navbar */
+  display: grid;
+  align-content: center; /* vertical center */
+  justify-items: center; /* horizontal center */
+  text-align: center;
+  color: var(--pf-text);
+  line-height: 1.25;
+  /* hard reset any old panel styles */
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  gap: 16px;
+}
+.hero::before,
+.hero::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Title & subtitle — tight */
+.hero-title {
+  margin: 0; /* spacing handled by gap below if needed */
+  font-weight: 800;
+  font-size: clamp(26px, 4vw, 38px);
+  line-height: 1.12;
+}
+.hero-sub {
+  margin: 6px 0 0; /* small gap from title */
+  color: var(--pf-muted);
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+/* CTAs */
+.cta-grid {
+  margin-top: 12px; /* ↓ was 18px */
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px; /* ↓ was 18–20px */
+}
+@media (max-width: 860px) {
+  .cta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 16px 18px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+}
+.card h3 {
+  margin: 2px 0 4px; /* tighter heading→caption gap */
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.muted {
+  color: var(--pf-muted);
+  margin: 2px 0 10px; /* ↓ was 6/14 */
+  line-height: 1.3;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: var(--pf-primary);
+  color: #0b1020;
+  font-weight: 800;
+  cursor: pointer;
+  line-height: 1; /* remove extra space inside button */
+  transition:
+    filter 0.15s ease,
+    transform 0.03s ease,
+    box-shadow 0.15s ease;
+  box-shadow: 0 8px 18px rgba(124, 156, 255, 0.24);
+}
+.btn:hover {
+  filter: brightness(1.06);
+}
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--pf-text);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.btn.ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Optional: small balance note under hero */
+.points-note {
+  margin-top: 8px;
+  color: var(--pf-muted);
+}
+.points-note strong {
+  color: var(--pf-text);
+}

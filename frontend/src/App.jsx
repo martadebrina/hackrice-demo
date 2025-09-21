@@ -1,21 +1,20 @@
-// src/App.jsx
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
-// your components (make sure the folder name matches your project: Components vs components)
 import Hero from "./Components/Hero/Hero";
-import HeaderBar from "./Components/Navbar/HeaderBar";
+import Navbar from "./Components/Navbar/Navbar";
 import CreateRequest from "./Components/CreateRequest/CreateRequest";
-import RequestsSection from "./Components/RequestCard/RequestsSection";
+import Requests from "./Components/Requests/Requests"; // <-- NEW
+import Home from "./Components/Home/Home";
+import Profile from "./Components/Profile/Profile";
 
-// API helpers you already have
 import {
   fetchMe,
   createRequest,
   acceptRequest,
   completeRequest,
 } from "./lib/api";
-
 const API = import.meta.env.VITE_API_URL;
 
 export default function App() {
@@ -35,13 +34,12 @@ export default function App() {
   const [completed, setCompleted] = useState([]);
   const [tab, setTab] = useState("open");
   const [busy, setBusy] = useState(false);
+  const navigate = useNavigate();
 
-  // 🔎 Debug log – helps us see auth state in DevTools
   useEffect(() => {
     console.log("Auth0 state:", { isLoading, isAuthenticated, user, error });
   }, [isLoading, isAuthenticated, user, error]);
 
-  // helper to fetch by status
   async function fetchByStatus(status, mine = false) {
     const token = await getAccessTokenSilently({
       audience: import.meta.env.VITE_AUTH0_AUDIENCE,
@@ -66,7 +64,6 @@ export default function App() {
     setCompleted(compL);
   }
 
-  // Load data after login (and after SDK finishes loading)
   useEffect(() => {
     if (!isAuthenticated || isLoading) return;
     let es;
@@ -74,38 +71,32 @@ export default function App() {
 
     (async () => {
       try {
-        // Get a token to pass as query param (EventSource can't send headers)
         const token = await getAccessTokenSilently({
           audience: import.meta.env.VITE_AUTH0_AUDIENCE,
         });
-
+        await refetchAll(); // initial load
         es = new EventSource(
           `${API}/events?access_token=${encodeURIComponent(token)}`,
         );
-
         es.onmessage = async (e) => {
-          if (cancelled) return;
-          if (!e.data) return;
+          if (cancelled || !e.data) return;
           try {
             const evt = JSON.parse(e.data);
-            // React only to interesting events
             if (
-              evt?.type === "request:created" ||
-              evt?.type === "request:accepted" ||
-              evt?.type === "request:completed" ||
-              evt?.type === "user:points_changed"
+              [
+                "request:created",
+                "request:accepted",
+                "request:completed",
+                "user:points_changed",
+              ].includes(evt?.type)
             ) {
               await refetchAll();
             }
           } catch {
-            // some events (like hello/ping) might be "{}"
+            /* ignore parse */
           }
         };
-
-        es.onerror = (err) => {
-          // Let the browser auto-reconnect; just log it
-          console.warn("SSE error:", err);
-        };
+        es.onerror = (err) => console.warn("SSE error:", err);
       } catch {
         console.error("Failed to start SSE:");
       }
@@ -117,175 +108,173 @@ export default function App() {
     };
   }, [isAuthenticated, isLoading, getAccessTokenSilently]);
 
-  if (isLoading) {
-    return (
-      <div
-        style={{ maxWidth: 720, margin: "2rem auto", fontFamily: "system-ui" }}
-      >
-        Loading…
-      </div>
-    );
+  if (isLoading)
+    return <div style={{ maxWidth: 720, margin: "2rem auto" }}>Loading…</div>;
+  if (!isAuthenticated) return <Hero onLogin={() => loginWithRedirect()} />;
+
+  // Helpers for Requests component
+  function itemsFor(tabName) {
+    if (tabName === "open") return open;
+    if (tabName === "accepted") return accepted;
+    return completed;
   }
 
-  if (!isAuthenticated) {
-    return <Hero onLogin={() => loginWithRedirect()} />;
+  async function handleAccept(id) {
+    try {
+      const item = open.find((x) => x._id === id);
+      if (me && item && item.studentId === me._id) {
+        alert("You can’t accept your own request.");
+        return;
+      }
+      setBusy(true);
+      await acceptRequest(getAccessTokenSilently, id);
+      await refetchAll();
+      alert("Accepted! Join link is in Accepted tab.");
+      setTab("accepted");
+    } catch (e) {
+      console.error("Accept failed:", e);
+      alert(e?.message || "Cannot accept this request.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleComplete(id) {
+    try {
+      setBusy(true);
+      const data = await completeRequest(getAccessTokenSilently, id);
+      if (data?.callerPoints != null) {
+        setMe((m) => (m ? { ...m, points: data.callerPoints } : m));
+      }
+      await refetchAll();
+      alert("Completed! Points transferred.");
+      setTab("completed");
+    } catch (e) {
+      console.error("Complete failed:", e);
+      alert("Cannot complete.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
     <div>
-      <HeaderBar
-        name={user?.name}
+      <Navbar
+        name={
+          me?.name || user?.name || user?.nickname || user?.email?.split("@")[0]
+        }
+        email={user?.email}
+        avatarUrl={user?.picture}
         points={me?.points}
         onLogout={() => logout({ returnTo: window.location.origin })}
+        onOpenProfile={() => navigate("/profile")}
+        onMyRequests={() => navigate("/requests")}
       />
 
-      {/* Create new request (disabled while busy) */}
-      <CreateRequest
-        onSubmit={async (payload) => {
-          try {
-            setBusy(true);
-            if (!me) {
-              const meData = await fetchMe(getAccessTokenSilently);
-              setMe(meData);
-            }
-            await createRequest(getAccessTokenSilently, payload);
-            setOpen(await fetchByStatus("open"));
-          } catch (e) {
-            console.error("Create failed:", e);
-            alert("Could not create request. Check console for details.");
-          } finally {
-            setBusy(false);
+      <Routes>
+        {/* HOME */}
+        <Route
+          path="/"
+          element={
+            <Home
+              name={
+                me?.name ||
+                user?.name ||
+                user?.nickname ||
+                user?.email?.split("@")[0]
+              }
+              points={me?.points}
+              onCreateRequest={() => navigate("/create")}
+              onBrowseRequests={() => navigate("/requests")}
+              showHistory={true}
+            />
           }
-        }}
-      />
+        />
 
-      {/* Tabs */}
-      <div style={{ maxWidth: 720, margin: "0 auto" }}>
-        <div style={{ display: "flex", gap: 8, margin: "12px 0" }}>
-          {["open", "accepted", "completed"].map((t) => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              style={{
-                padding: "6px 10px",
-                borderRadius: 10,
-                border: "1px solid #222",
-                background: tab === t ? "#111" : "transparent",
-                color: tab === t ? "#fff" : "#111",
-                cursor: "pointer",
+        {/* CREATE REQUEST PAGE */}
+        <Route
+          path="/create"
+          element={
+            <div style={{ padding: "0 20px" }}>
+              <div style={{ maxWidth: 980, margin: "12px auto" }}>
+                <button
+                  className="btn ghost"
+                  onClick={() => navigate(-1)}
+                  style={{ marginBottom: 10 }}
+                >
+                  ← Back
+                </button>
+              </div>
+              <CreateRequest
+                disabled={busy}
+                onSubmit={async (payload) => {
+                  try {
+                    setBusy(true);
+                    if (!me) setMe(await fetchMe(getAccessTokenSilently));
+                    await createRequest(getAccessTokenSilently, payload);
+                    await refetchAll();
+                    navigate("/requests");
+                    setTab("open");
+                  } catch (e) {
+                    console.error("Create failed:", e);
+                    alert("Could not create request.");
+                  } finally {
+                    setBusy(false);
+                  }
+                }}
+              />
+            </div>
+          }
+        />
+
+        {/* REQUESTS / ACTIVITY PAGE */}
+        <Route
+          path="/requests"
+          element={
+            <Requests
+              title="Requests List"
+              items={itemsFor(tab)}
+              activeTab={tab}
+              onTabChange={setTab}
+              onBack={() => navigate(-1)}
+              onRefresh={refetchAll}
+              onAccept={handleAccept}
+              onComplete={handleComplete}
+              disabled={busy}
+            />
+          }
+        />
+
+        {/* (optional) future pages */}
+        {/* <Route path="/profile" element={<Profile />} /> */}
+        <Route
+          path="/profile"
+          element={
+            <Profile
+              name={
+                me?.name ||
+                user?.name ||
+                user?.nickname ||
+                user?.email?.split("@")[0]
+              }
+              email={user?.email}
+              avatarUrl={user?.picture}
+              points={me?.points}
+              onLogout={() => logout({ returnTo: window.location.origin })}
+              onBack={() => navigate(-1)}
+              onSaveProfile={async ({ name, avatarUrl }) => {
+                // TODO: sambungkan ke API backend kalau sudah ada.
+                // Untuk sekarang cukup update state lokal biar Navbar ikut berubah.
+                setMe((m) =>
+                  m
+                    ? { ...m, name, avatarUrl }
+                    : { name, avatarUrl, points: me?.points ?? 0 },
+                );
               }}
-            >
-              {t[0].toUpperCase() + t.slice(1)}
-            </button>
-          ))}
-          <button
-            onClick={async () => {
-              try {
-                setBusy(true);
-                await refetchAll();
-              } catch (e) {
-                console.error("Refresh failed:", e);
-              } finally {
-                setBusy(false);
-              }
-            }}
-            style={{
-              marginLeft: "auto",
-              padding: "6px 10px",
-              borderRadius: 10,
-              border: "1px solid #222",
-              background: "transparent",
-              color: "#111",
-              cursor: "pointer",
-            }}
-          >
-            Refresh
-          </button>
-        </div>
-
-        {/* Open tab */}
-        {tab === "open" && (
-          <RequestsSection
-            items={open}
-            onAccept={async (id) => {
-              try {
-                const item = open.find((x) => x._id === id);
-                if (me && item && item.studentId === me._id) {
-                  alert("You can’t accept your own request.");
-                  return;
-                }
-
-                setBusy(true);
-                await acceptRequest(getAccessTokenSilently, id);
-
-                const [openL, accL] = await Promise.all([
-                  fetchByStatus("open"),
-                  fetchByStatus("accepted", true), // if you added mine=1 earlier
-                ]);
-                setOpen(openL);
-                setAccepted(accL);
-                alert("Accepted! Join link added under the Accepted tab.");
-                setTab("accepted");
-              } catch (e) {
-                console.error("Accept failed:", e);
-                alert(e?.message || "Cannot accept this request.");
-              } finally {
-                setBusy(false);
-              }
-            }}
-            onComplete={() => {}}
-            disabled={busy}
-          />
-        )}
-
-        {/* Accepted tab */}
-        {tab === "accepted" && (
-          <RequestsSection
-            items={accepted}
-            onAccept={() => {}}
-            onComplete={async (id) => {
-              try {
-                setBusy(true);
-                const data = await completeRequest(getAccessTokenSilently, id);
-
-                // optimistic UI using server's fresh number
-                if (data?.callerPoints != null) {
-                  setMe((m) => (m ? { ...m, points: data.callerPoints } : m));
-                }
-
-                // then re-fetch lists (and me as you already do)
-                const [accL, compL, meData] = await Promise.all([
-                  fetchByStatus("accepted"),
-                  fetchByStatus("completed"),
-                  fetchMe(getAccessTokenSilently),
-                ]);
-                setAccepted(accL);
-                setCompleted(compL);
-                setMe(meData);
-
-                alert("Completed! Points transferred.");
-                setTab("completed");
-              } catch (e) {
-                console.error("Complete failed:", e);
-                alert("Cannot complete.");
-              } finally {
-                setBusy(false);
-              }
-            }}
-            disabled={busy}
-          />
-        )}
-
-        {/* Completed tab */}
-        {tab === "completed" && (
-          <RequestsSection
-            items={completed}
-            onAccept={() => {}}
-            onComplete={() => {}}
-            disabled={busy}
-          />
-        )}
-      </div>
+            />
+          }
+        />
+      </Routes>
     </div>
   );
 }

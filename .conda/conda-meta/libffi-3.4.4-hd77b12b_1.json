@@ -3,10 +3,7 @@
   "build_number": 1,
   "channel": "https://repo.anaconda.com/pkgs/main/win-64",
   "constrains": [],
-  "depends": [
-    "vc >=14.1,<15.0a0",
-    "vs2015_runtime >=14.16.27012,<15.0a0"
-  ],
+  "depends": ["vc >=14.1,<15.0a0", "vs2015_runtime >=14.16.27012,<15.0a0"],
   "extracted_package_dir": "C:\\Users\\dilon\\anaconda3\\pkgs\\libffi-3.4.4-hd77b12b_1",
   "features": "",
   "files": [

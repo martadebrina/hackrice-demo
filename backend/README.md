@@ -35,9 +35,10 @@ uvicorn backend.main:app --reload
 ```
 
 This command does a few things:
-*   `uvicorn`: The server that runs your application.
-*   `backend.main:app`: Tells `uvicorn` to look for an object named `app` in the `backend/main.py` file.
-*   `--reload`: Automatically restarts the server whenever you make changes to the code.
+
+- `uvicorn`: The server that runs your application.
+- `backend.main:app`: Tells `uvicorn` to look for an object named `app` in the `backend/main.py` file.
+- `--reload`: Automatically restarts the server whenever you make changes to the code.
 
 Your API is now live at `http://localhost:8000`.
 
@@ -92,9 +93,9 @@ Now that you're set up, here's how you can start building your own features. Eac
 
 **The Concept:** Your application needs a way to store and manage data, like users, posts, or products. We use **SQLAlchemy**, a powerful tool that lets you define your database tables using Python classes called "models." These models live in the `models/` directory. To ensure your data has the correct format when it comes in and out of your API, we use **Pydantic** schemas, which live in the `schemas/` directory. Finally, the actual database logic (creating, reading, updating, deleting) is handled by functions in the `crud/` directory.
 
-*   **Learn more:**
-    *   SQLAlchemy ORM: [https://docs.sqlalchemy.org/en/20/orm/](https://docs.sqlalchemy.org/en/20/orm/)
-    *   Pydantic Models: [https://docs.pydantic.dev/latest/](https://docs.pydantic.dev/latest/)
+- **Learn more:**
+  - SQLAlchemy ORM: [https://docs.sqlalchemy.org/en/20/orm/](https://docs.sqlalchemy.org/en/20/orm/)
+  - Pydantic Models: [https://docs.pydantic.dev/latest/](https://docs.pydantic.dev/latest/)
 
 **Actionable Steps (Example: Adding a `Post` model):**
 
@@ -106,8 +107,8 @@ Now that you're set up, here's how you can start building your own features. Eac
 
 **The Concept:** An API endpoint is a specific URL where your application listens for requests. We use **FastAPI's `APIRouter`** to group related endpoints together. This keeps your code organized. For example, all user-related endpoints (`/users/`, `/users/{id}`) would go into a user router. These routers are defined in the `api/v1/endpoints/` directory and then included in the main `FastAPI` app in `main.py`.
 
-*   **Learn more:**
-    *   FastAPI Tutorial - Bigger Applications: [https://fastapi.tiangolo.com/tutorial/bigger-applications/](https://fastapi.tiangolo.com/tutorial/bigger-applications/)
+- **Learn more:**
+  - FastAPI Tutorial - Bigger Applications: [https://fastapi.tiangolo.com/tutorial/bigger-applications/](https://fastapi.tiangolo.com/tutorial/bigger-applications/)
 
 **Actionable Steps (Example: Exposing the `Post` model):**
 
@@ -142,16 +143,16 @@ A complete feature module typically includes:
 
 **How to Structure Your Code:**
 
-*   **Group by Feature:** For larger applications, you might even create a new directory for each module (e.g., `backend/blog/`) that contains its own `models.py`, `schemas.py`, `crud.py`, and `endpoints.py`.
-*   **Keep it Simple:** For a hackathon, keeping models, schemas, and CRUD operations in their respective top-level directories (`models/`, `schemas/`, `crud/`) is perfectly fine. The key is to be consistent.
+- **Group by Feature:** For larger applications, you might even create a new directory for each module (e.g., `backend/blog/`) that contains its own `models.py`, `schemas.py`, `crud.py`, and `endpoints.py`.
+- **Keep it Simple:** For a hackathon, keeping models, schemas, and CRUD operations in their respective top-level directories (`models/`, `schemas/`, `crud/`) is perfectly fine. The key is to be consistent.
 
 **Extending the Core:**
 
 Don't be afraid to extend the core modules when needed:
 
-*   **`core/security.py`:** You might add new functions for handling permissions or different authentication methods.
-*   **`core/config.py`:** Add new configuration variables from your `.env` file as your application needs them.
-*   **`db/`:** If you decide to use a different database or need more complex session management, you can modify the code here.
+- **`core/security.py`:** You might add new functions for handling permissions or different authentication methods.
+- **`core/config.py`:** Add new configuration variables from your `.env` file as your application needs them.
+- **`db/`:** If you decide to use a different database or need more complex session management, you can modify the code here.
 
 By following these principles, you can build a clean, scalable, and maintainable backend for your project.
 

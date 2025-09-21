@@ -2,9 +2,7 @@
   "build": "h02ab6af_0",
   "build_number": 0,
   "channel": "https://repo.anaconda.com/pkgs/main/win-64",
-  "constrains": [
-    "zlib 1.3.1"
-  ],
+  "constrains": ["zlib 1.3.1"],
   "depends": [
     "ucrt >=10.0.20348.0",
     "vc >=14.2,<15",
@@ -12,11 +10,7 @@
   ],
   "extracted_package_dir": "C:\\Users\\dilon\\anaconda3\\pkgs\\libzlib-1.3.1-h02ab6af_0",
   "features": "",
-  "files": [
-    "Library/bin/zlib.dll",
-    "zlib.dll",
-    ".nonadmin"
-  ],
+  "files": ["Library/bin/zlib.dll", "zlib.dll", ".nonadmin"],
   "fn": "libzlib-1.3.1-h02ab6af_0.conda",
   "legacy_bz2_md5": "2e50a625ac549de0dfc3348639d84174",
   "license": "Zlib",

@@ -1,0 +1,333 @@
+:root {
+  --pf-bg-1: #0b1020;
+  --pf-bg-2: #1b2540;
+  --pf-card: rgba(255, 255, 255, 0.06);
+  --pf-border: rgba(255, 255, 255, 0.12);
+  --pf-text: rgba(255, 255, 255, 0.92);
+  --pf-muted: rgba(255, 255, 255, 0.65);
+  --pf-primary: #7c9cff;
+  --pf-danger: #ef4444;
+  --pf-radius: 16px;
+}
+
+/* NAVBAR WRAPPER */
+.pf-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  padding: 0 18px;
+  color: var(--pf-text);
+  backdrop-filter: blur(8px);
+  background: linear-gradient(
+    to bottom,
+    rgba(11, 16, 32, 0.85),
+    rgba(11, 16, 32, 0.45)
+  );
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* LEFT */
+.logo {
+  width: auto;
+  height: 52px;
+  display: block;
+}
+
+/* RIGHT GROUP */
+.pf-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Greeting hides on small screens */
+.pf-greeting {
+  color: var(--pf-muted);
+  font-weight: 700;
+}
+@media (max-width: 720px) {
+  .pf-greeting {
+    display: none;
+  }
+}
+
+/* Points pill */
+.pf-points {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: var(--pf-card);
+  border: 1px solid var(--pf-border);
+  line-height: 1;
+  font-weight: 800;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.pf-dot {
+  font-size: 16px;
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+.pf-points-num {
+  min-width: 1.2em;
+  text-align: right;
+}
+.pf-points-lbl {
+  opacity: 0.85;
+}
+
+/* Avatar button */
+.pf-avatar-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid rgba(124, 156, 255, 0.95);
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  outline: none;
+}
+.pf-avatar-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(124, 156, 255, 0.35);
+}
+.pf-avatar-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.pf-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background: #5a6e96;
+  color: #fff;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+/* Hamburger button */
+.pf-icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--pf-border);
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  position: relative;
+}
+.pf-icon-btn.small {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+}
+.pf-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.pf-hamburger {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 2px;
+  background: var(--pf-text);
+}
+.pf-hamburger::before,
+.pf-hamburger::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--pf-text);
+}
+.pf-hamburger::before {
+  top: -6px;
+}
+.pf-hamburger::after {
+  top: 6px;
+}
+
+/* X icon for drawer close */
+.pf-close {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 2px;
+  background: transparent;
+}
+.pf-close::before,
+.pf-close::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--pf-text);
+}
+.pf-close::before {
+  transform: rotate(45deg);
+}
+.pf-close::after {
+  transform: rotate(-45deg);
+}
+
+/* Account popover */
+.pf-acct-popover {
+  position: fixed;
+  right: 18px;
+  top: 80px;
+  z-index: 1100;
+  width: 280px;
+  border-radius: 14px;
+  background: rgba(18, 26, 44, 0.98);
+  border: 1px solid var(--pf-border);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  color: var(--pf-text);
+}
+.pf-acct-head {
+  display: flex;
+  gap: 12px;
+  padding: 14px 14px 8px;
+}
+.pf-acct-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--pf-border);
+  display: grid;
+  place-items: center;
+}
+.pf-acct-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pf-acct-name {
+  font-weight: 800;
+}
+.pf-acct-email {
+  color: var(--pf-muted);
+  font-size: 13px;
+}
+
+.pf-menu {
+  padding: 8px;
+}
+.pf-menu-item {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  padding: 10px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--pf-text);
+  font-weight: 700;
+}
+.pf-menu-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.pf-menu-item.danger {
+  color: #ffd8d8;
+}
+.pf-menu-item.danger:hover {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.35);
+}
+.pf-menu-sep {
+  border: none;
+  height: 1px;
+  margin: 8px 6px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+}
+
+/* Drawer */
+.pf-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none;
+  transition: background 0.18s ease;
+  z-index: 1050;
+}
+.pf-drawer-backdrop.show {
+  background: rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+}
+
+.pf-drawer {
+  position: fixed;
+  right: -340px;
+  top: 0;
+  height: 100vh;
+  width: 320px;
+  background: rgba(18, 26, 44, 0.98);
+  color: var(--pf-text);
+  border-left: 1px solid var(--pf-border);
+  box-shadow: -12px 0 30px rgba(0, 0, 0, 0.4);
+  transition: right 0.22s ease;
+  z-index: 1060;
+  display: flex;
+  flex-direction: column;
+}
+.pf-drawer.open {
+  right: 0;
+}
+
+.pf-drawer-head {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.pf-drawer-title {
+  font-weight: 800;
+  font-size: 18px;
+}
+.pf-drawer-nav {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pf-drawer-link {
+  padding: 12px 12px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--pf-text);
+  border: 1px solid transparent;
+  background: transparent;
+  font-weight: 700;
+}
+.pf-drawer-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.pf-drawer-footer {
+  margin-top: auto;
+  padding: 12px;
+}
+.pf-muted {
+  color: var(--pf-muted);
+  font-size: 12px;
+}

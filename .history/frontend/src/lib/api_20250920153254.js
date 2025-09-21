@@ -18,7 +18,11 @@ async function withToken(getAccessTokenSilently) {
 
 async function handle(res) {
   let data;
-  try { data = await res.json(); } catch { /* ignore */ }
+  try {
+    data = await res.json();
+  } catch {
+    /* ignore */
+  }
   if (!res.ok) {
     const msg = data?.detail || data?.message || `HTTP ${res.status}`;
     const err = new Error(msg);
@@ -41,25 +45,31 @@ export async function fetchOpenRequests(getAccessTokenSilently) {
 
 export async function createRequest(getAccessTokenSilently, payload) {
   const opts = await withToken(getAccessTokenSilently);
-  return handle(await fetch(`${API}/requests`, {
-    method: "POST",
-    ...opts,
-    body: JSON.stringify(payload),
-  }));
+  return handle(
+    await fetch(`${API}/requests`, {
+      method: "POST",
+      ...opts,
+      body: JSON.stringify(payload),
+    }),
+  );
 }
 
 export async function acceptRequest(getAccessTokenSilently, id) {
   const opts = await withToken(getAccessTokenSilently);
-  return handle(await fetch(`${API}/requests/${id}/accept`, {
-    method: "POST",
-    headers: opts.headers,
-  }));
+  return handle(
+    await fetch(`${API}/requests/${id}/accept`, {
+      method: "POST",
+      headers: opts.headers,
+    }),
+  );
 }
 
 export async function completeRequest(getAccessTokenSilently, id) {
   const opts = await withToken(getAccessTokenSilently);
-  return handle(await fetch(`${API}/requests/${id}/complete`, {
-    method: "POST",
-    headers: opts.headers,
-  }));
+  return handle(
+    await fetch(`${API}/requests/${id}/complete`, {
+      method: "POST",
+      headers: opts.headers,
+    }),
+  );
 }

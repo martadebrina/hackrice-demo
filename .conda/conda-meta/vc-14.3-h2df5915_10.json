@@ -3,14 +3,10 @@
   "build_number": 10,
   "channel": "https://repo.anaconda.com/pkgs/main/win-64",
   "constrains": [],
-  "depends": [
-    "vc14_runtime >=14.42.34433"
-  ],
+  "depends": ["vc14_runtime >=14.42.34433"],
   "extracted_package_dir": "C:\\Users\\dilon\\anaconda3\\pkgs\\vc-14.3-h2df5915_10",
   "features": "",
-  "files": [
-    ".nonadmin"
-  ],
+  "files": [".nonadmin"],
   "fn": "vc-14.3-h2df5915_10.conda",
   "legacy_bz2_md5": "08ec0826da418be406f48b6c8c26b0ff",
   "license": "BSD-3-Clause",

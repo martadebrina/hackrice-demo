@@ -3,11 +3,7 @@
   "build_number": 0,
   "channel": "https://repo.anaconda.com/pkgs/main/noarch",
   "constrains": [],
-  "depends": [
-    "python >=3.9,<3.14.0a0",
-    "setuptools",
-    "wheel"
-  ],
+  "depends": ["python >=3.9,<3.14.0a0", "setuptools", "wheel"],
   "extracted_package_dir": "C:\\Users\\dilon\\anaconda3\\pkgs\\pip-25.2-pyhc872135_0",
   "features": "",
   "files": [
