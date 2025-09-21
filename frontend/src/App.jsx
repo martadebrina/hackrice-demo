@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 
 // your components (make sure the folder name matches your project: Components vs components)
 import Hero from "./Components/Hero/Hero";
-import HeaderBar from "./Components/HeaderBar";
-import CreateRequest from "./Components/CreateRequest";
-import RequestsSection from "./Components/RequestsSection";
+import HeaderBar from "./Components/Navbar/HeaderBar";
+import CreateRequest from "./Components/CreateRequest/CreateRequest";
+import RequestsSection from "./Components/RequestCard/RequestsSection";
 
 // API helpers you already have
 import {
