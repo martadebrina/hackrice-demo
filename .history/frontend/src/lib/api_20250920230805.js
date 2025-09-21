@@ -10,7 +10,7 @@ async function withToken(getAccessTokenSilently) {
   });
   return {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: Bearer ${token},
       "Content-Type": "application/json",
     },
   };
@@ -24,7 +24,7 @@ async function handle(res) {
     /* ignore */
   }
   if (!res.ok) {
-    const msg = data?.detail || data?.message || `HTTP ${res.status}`;
+    const msg = data?.detail || data?.message || HTTP ${res.status};
     const err = new Error(msg);
     err.status = res.status;
     err.body = data;
@@ -35,18 +35,18 @@ async function handle(res) {
 
 export async function fetchMe(getAccessTokenSilently) {
   const opts = await withToken(getAccessTokenSilently);
-  return handle(await fetch(`${API}/me`, opts));
+  return handle(await fetch(${API}/me, opts));
 }
 
 export async function fetchOpenRequests(getAccessTokenSilently) {
   const opts = await withToken(getAccessTokenSilently);
-  return handle(await fetch(`${API}/requests?status=open`, opts));
+  return handle(await fetch(${API}/requests?status=open, opts));
 }
 
 export async function createRequest(getAccessTokenSilently, payload) {
   const opts = await withToken(getAccessTokenSilently);
   return handle(
-    await fetch(`${API}/requests`, {
+    await fetch(${API}/requests, {
       method: "POST",
       ...opts,
       body: JSON.stringify(payload),
@@ -57,7 +57,7 @@ export async function createRequest(getAccessTokenSilently, payload) {
 export async function acceptRequest(getAccessTokenSilently, id) {
   const opts = await withToken(getAccessTokenSilently);
   return handle(
-    await fetch(`${API}/requests/${id}/accept`, {
+    await fetch(${API}/requests/${id}/accept, {
       method: "POST",
       headers: opts.headers,
     }),
@@ -67,7 +67,7 @@ export async function acceptRequest(getAccessTokenSilently, id) {
 export async function completeRequest(getAccessTokenSilently, id) {
   const opts = await withToken(getAccessTokenSilently);
   return handle(
-    await fetch(`${API}/requests/${id}/complete`, {
+    await fetch(${API}/requests/${id}/complete, {
       method: "POST",
       headers: opts.headers,
     }),

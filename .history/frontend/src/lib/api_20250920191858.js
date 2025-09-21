@@ -73,3 +73,31 @@ export async function completeRequest(getAccessTokenSilently, id) {
     }),
   );
 }
+
+export async function scheduleRequest(getAccessTokenSilently, id, { scheduledAtISO, durationMin, scheduledTz }) {
+  const opts = await withToken(getAccessTokenSilently);
+  const res = await fetch(`${API}/requests/${id}/schedule`, {
+    method: "POST",
+    headers: opts.headers,
+    body: JSON.stringify({ scheduledAtISO, durationMin, scheduledTz }),
+  });
+  return handle(res);
+}
+
+export async function confirmSchedule(getAccessTokenSilently, id) {
+  const opts = await withToken(getAccessTokenSilently);
+  const res = await fetch(`${API}/requests/${id}/schedule/confirm`, {
+    method: "POST",
+    headers: opts.headers,
+  });
+  return handle(res);
+}
+
+export async function cancelSchedule(getAccessTokenSilently, id) {
+  const opts = await withToken(getAccessTokenSilently);
+  const res = await fetch(`${API}/requests/${id}/schedule/cancel`, {
+    method: "POST",
+    headers: opts.headers,
+  });
+  return handle(res);
+}

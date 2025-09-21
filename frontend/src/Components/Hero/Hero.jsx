@@ -4,10 +4,10 @@ import "./Hero.css";
 export default function Hero({ onLogin }) {
   // Create a few decorative "stars" with varied positions/timings
   const stars = Array.from({ length: 28 }).map((_, i) => {
-    const left = Math.random() * 100;            // 0–100vw
-    const size = 1 + Math.random() * 2;          // 1–3px
-    const delay = Math.random() * 6;             // 0–6s
-    const duration = 6 + Math.random() * 8;      // 6–14s
+    const left = Math.random() * 100; // 0–100vw
+    const size = 1 + Math.random() * 2; // 1–3px
+    const delay = Math.random() * 6; // 0–6s
+    const duration = 6 + Math.random() * 8; // 6–14s
     const offsetX = (Math.random() - 0.5) * 200; // slight diagonal drift
 
     return (
@@ -20,7 +20,7 @@ export default function Hero({ onLogin }) {
           height: `${size}px`,
           animationDelay: `${delay}s`,
           animationDuration: `${duration}s`,
-          '--driftX': `${offsetX}px`,
+          "--driftX": `${offsetX}px`,
         }}
       />
     );
@@ -46,11 +46,13 @@ export default function Hero({ onLogin }) {
         />
 
         <h1 className="hero__title">
-          Peer-to-peer tutoring: <span className="hero__accent">no money, just points</span>
+          Peer-to-peer tutoring:{" "}
+          <span className="hero__accent">no money, just points</span>
         </h1>
 
         <p className="hero__subtitle">
-          Help your classmates, earn credits, and redeem them when you need support.
+          Help your classmates, earn credits, and redeem them when you need
+          support.
         </p>
 
         <button className="btn btn--primary" onClick={onLogin} type="button">
