@@ -9,9 +9,9 @@
        that can display a to-do list/tasks for a team.
 */
 // get references to the main HTML elements we're gonna interact with
-const taskForm = document.getElementById("task-form");    // form for adding new tasks
-const taskInput = document.getElementById("task-input");  // input box where user types the task
-const taskList = document.getElementById("task-list");    //  <ul> where tasks will be displayed
+const taskForm = document.getElementById("task-form"); // form for adding new tasks
+const taskInput = document.getElementById("task-input"); // input box where user types the task
+const taskList = document.getElementById("task-list"); //  <ul> where tasks will be displayed
 const API_BASE = "/api/v1";
 
 // This function loads tasks from the backend and displays them on the page

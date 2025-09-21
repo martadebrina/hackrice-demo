@@ -84,17 +84,13 @@ export default function App() {
 
   // Loading gates
   if (isLoading) {
-    return (
-      <div style={loadingShell}>Loading…</div>
-    );
+    return <div style={loadingShell}>Loading…</div>;
   }
   if (!isAuthenticated) {
     return <Hero onLogin={() => loginWithRedirect()} />;
   }
   if (!me) {
-    return (
-      <div style={loadingShell}>Loading profile…</div>
-    );
+    return <div style={loadingShell}>Loading profile…</div>;
   }
 
   return (
@@ -116,7 +112,10 @@ export default function App() {
               setMe(meData);
             }
             // Create
-            const created = await createRequest(getAccessTokenSilently, payload);
+            const created = await createRequest(
+              getAccessTokenSilently,
+              payload,
+            );
             // Optimistic add
             setOpen((prev) => [
               { _id: created._id, ...payload, status: "open" },
@@ -231,7 +230,10 @@ export default function App() {
             onComplete={async (id) => {
               try {
                 setBusy(true);
-                const updated = await completeRequest(getAccessTokenSilently, id); // updated doc
+                const updated = await completeRequest(
+                  getAccessTokenSilently,
+                  id,
+                ); // updated doc
                 setAccepted((prev) => prev.filter((x) => x._id !== id));
                 setCompleted((prev) => [updated, ...prev]);
                 const meData = await fetchMe(getAccessTokenSilently);
@@ -270,4 +272,8 @@ export default function App() {
 }
 
 // tiny style
-const loadingShell = { maxWidth: 720, margin: "2rem auto", fontFamily: "system-ui" };
+const loadingShell = {
+  maxWidth: 720,
+  margin: "2rem auto",
+  fontFamily: "system-ui",
+};

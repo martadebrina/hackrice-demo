@@ -3,10 +3,7 @@
   "build_number": 0,
   "channel": "https://repo.anaconda.com/pkgs/main/win-64",
   "constrains": [],
-  "depends": [
-    "vc >=14.2,<15.0a0",
-    "vs2015_runtime >=14.29.30133,<15.0a0"
-  ],
+  "depends": ["vc >=14.2,<15.0a0", "vs2015_runtime >=14.29.30133,<15.0a0"],
   "extracted_package_dir": "C:\\Users\\dilon\\anaconda3\\pkgs\\expat-2.7.1-h8ddb27b_0",
   "features": "",
   "files": [

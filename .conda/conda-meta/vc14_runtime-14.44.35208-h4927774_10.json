@@ -2,12 +2,8 @@
   "build": "h4927774_10",
   "build_number": 10,
   "channel": "https://repo.anaconda.com/pkgs/main/win-64",
-  "constrains": [
-    "vs2015_runtime 14.44.35208.* *_10"
-  ],
-  "depends": [
-    "ucrt >=10.0.20348.0"
-  ],
+  "constrains": ["vs2015_runtime 14.44.35208.* *_10"],
+  "depends": ["ucrt >=10.0.20348.0"],
   "extracted_package_dir": "C:\\Users\\dilon\\anaconda3\\pkgs\\vc14_runtime-14.44.35208-h4927774_10",
   "features": "",
   "files": [

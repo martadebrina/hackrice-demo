@@ -2,9 +2,7 @@
   "build": "haa95532_0",
   "build_number": 0,
   "channel": "https://repo.anaconda.com/pkgs/main/win-64",
-  "constrains": [
-    "vs2015_runtime >=14.29.30037"
-  ],
+  "constrains": ["vs2015_runtime >=14.29.30037"],
   "depends": [],
   "extracted_package_dir": "C:\\Users\\dilon\\anaconda3\\pkgs\\ucrt-10.0.22621.0-haa95532_0",
   "features": "",

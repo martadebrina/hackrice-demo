@@ -7,10 +7,19 @@ async function token(getAccessTokenSilently) {
   });
 }
 
-async function apiFetch(getAccessTokenSilently, url, options = {}, retry = true) {
+async function apiFetch(
+  getAccessTokenSilently,
+  url,
+  options = {},
+  retry = true,
+) {
   const t = await token(getAccessTokenSilently);
   const res = await fetch(`${API}${url}`, {
-    headers: { Authorization: `Bearer ${t}`, "Content-Type": "application/json", ...(options.headers || {}) },
+    headers: {
+      Authorization: `Bearer ${t}`,
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
     ...options,
   });
   if (res.ok) return res.json();
@@ -21,9 +30,15 @@ async function apiFetch(getAccessTokenSilently, url, options = {}, retry = true)
   }
 
   let detail = "";
-  try { const j = await res.json(); detail = j.detail || JSON.stringify(j); } catch {}
-  const err = new Error(`${res.status} ${res.statusText}${detail ? `: ${detail}` : ""}`);
-  err.status = res.status; err.detail = detail;
+  try {
+    const j = await res.json();
+    detail = j.detail || JSON.stringify(j);
+  } catch {}
+  const err = new Error(
+    `${res.status} ${res.statusText}${detail ? `: ${detail}` : ""}`,
+  );
+  err.status = res.status;
+  err.detail = detail;
   throw err;
 }
 
@@ -37,11 +52,18 @@ export async function fetchByStatus(getAccessTokenSilently, status) {
   return apiFetch(getAccessTokenSilently, `/requests?status=${status}`);
 }
 export async function createRequest(getAccessTokenSilently, payload) {
-  return apiFetch(getAccessTokenSilently, "/requests", { method: "POST", body: JSON.stringify(payload) });
+  return apiFetch(getAccessTokenSilently, "/requests", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }
 export async function acceptRequest(getAccessTokenSilently, id) {
-  return apiFetch(getAccessTokenSilently, `/requests/${id}/accept`, { method: "POST" });
+  return apiFetch(getAccessTokenSilently, `/requests/${id}/accept`, {
+    method: "POST",
+  });
 }
 export async function completeRequest(getAccessTokenSilently, id) {
-  return apiFetch(getAccessTokenSilently, `/requests/${id}/complete`, { method: "POST" });
+  return apiFetch(getAccessTokenSilently, `/requests/${id}/complete`, {
+    method: "POST",
+  });
 }

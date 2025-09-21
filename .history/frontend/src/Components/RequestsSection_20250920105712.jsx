@@ -7,10 +7,21 @@ export default function RequestsSection({ items, onAccept, onComplete }) {
       <h2>Open Requests</h2>
       {items.length === 0 && <p>No open requests yet.</p>}
       {items.map((r) => (
-        <RequestCard key={r._id} r={r} onAccept={onAccept} onComplete={onComplete} />
+        <RequestCard
+          key={r._id}
+          r={r}
+          onAccept={onAccept}
+          onComplete={onComplete}
+        />
       ))}
     </section>
   );
 }
 
-const card = { border:"1px solid #eee", borderRadius:12, padding:16, margin:"16px auto", maxWidth:720 };
+const card = {
+  border: "1px solid #eee",
+  borderRadius: 12,
+  padding: 16,
+  margin: "16px auto",
+  maxWidth: 720,
+};
