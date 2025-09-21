@@ -1,0 +1,57 @@
+/* Reset + box sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Make the app stretch to the viewport height */
+html, body, #root {
+  height: 100%;
+}
+
+/* Use dynamic viewport units to avoid mobile 100vh bugs */
+body {
+  min-height: 100dvh;              /* better than 100vh on mobile */
+  background: linear-gradient(-45deg, #0f172a, #1e293b, #334155, #0b1020);
+  background-size: cover;          /* fill */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;    /* nice parallax feel */
+  color: #fff;
+  font-family: "Urbanist", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  /* remove global pointer; set cursor on interactive elements only */
+  cursor: default;
+}
+
+/* Make main app container flex to push footer, etc. */
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+/* If you use a main wrapper, let it grow */
+main {
+  flex: 1 1 auto;
+}
+
+/* Smooth scroll is fine */
+html { scroll-behavior: smooth; }
+
+/* Sections: keep responsive height but avoid forcing extra scroll on tiny screens */
+section {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* Only show pointer on interactive things */
+a, button, [role="button"], .btn, .chip, .tab {
+  cursor: pointer;
+}

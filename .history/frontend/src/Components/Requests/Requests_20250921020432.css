@@ -1,0 +1,294 @@
+:root {
+  /* tweak these two if your navbar is taller/shorter */
+  --nav-gap: 24px; /* space below navbar */
+  --box-vertical-padding: 16px;
+}
+
+/* outer section just centers the box */
+.reqs {
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--nav-gap) 16px;
+}
+
+/* the scrolling “card list” box */
+.reqs-box {
+  width: 100%; /* column width */
+  margin: 10px 100px;
+  height: calc(
+    100vh - 120px
+  ); /* viewport-height panel (adjust 120 if needed) */
+  background: rgba(
+    255,
+    255,
+    255,
+    0.04
+  ); /* subtle panel look for your dark bg */
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: var(--box-vertical-padding) 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* we control scroll inside */
+}
+
+/* sticky toolbar (pins inside the box) */
+.reqs-toolbar {
+  position: sticky;
+  top: 0; /* stick to top of the box */
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 8px;
+  background: transparent; /* keeps your blur showing */
+}
+
+/* left / right placement */
+.reqs-toolbar > .btn.ghost.small:first-child {
+  justify-self: start;
+}
+.reqs-toolbar > .btn.ghost.small:last-child {
+  justify-self: end;
+}
+
+/* tabs */
+.reqs-tabs {
+  display: inline-flex;
+  gap: 6px;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 4px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+.tab {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #475569;
+}
+.tab.active {
+  background: #0ea5e9;
+  color: #fff;
+}
+
+/* the only scrollable area */
+.reqs-scroll {
+  overflow-y: auto;
+  padding-right: 6px; /* spacing for scrollbar */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* nice, subtle scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 transparent;
+}
+.reqs-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.reqs-scroll::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 8px;
+}
+.reqs-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* empty state */
+.reqs-empty {
+  text-align: center;
+  padding: 40px 12px;
+  color: #64748b;
+}
+.empty-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* --- Card, stacked like the sketch --- */
+.req-card {
+  display: flex;
+  flex-direction: column; /* stack main then actions */
+  gap: 12px;
+  padding: 16px;
+  margin: 10px 30px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 10px rgba(2, 6, 23, 0.06);
+  background: rgba(255, 255, 255, 0.06); /* semi-transparent */
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+.req-card__main {
+  display: grid;
+  gap: 8px;
+}
+.req-card__line {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+.req-card__subject {
+  font-weight: 700;
+  font-size: 18px;
+  color: #ffffff;
+}
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #bdc5e6;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.value {
+  font-size: 15px;
+  color: #ffffff;
+}
+.req-card__desc {
+  margin-top: 2px;
+  padding-top: 6px;
+  border-top: 1px dashed #e2e8f0;
+  color: #ffffff;
+  line-height: 1.4;
+  font-size: 14px;
+}
+
+.req-card__side {
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+.points {
+  font-weight: 800;
+  color: #ffffff;
+}
+.pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+.pill.open {
+  background: #fef3c7;
+  color: #92400e;
+}
+.pill.accepted {
+  background: #dbeafe;
+  color: #1e40af;
+}
+.pill.completed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.btn {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.02s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn.ghost {
+  background: #ffffff;
+  color: #0f172a;
+  border-color: #e5e7eb;
+}
+.btn.small {
+  padding: 6px 10px;
+  font-size: 14px;
+}
+.btn-accept {
+  background: #0ea5e9;
+  color: white;
+}
+.btn-complete {
+  background: #22c55e;
+  color: white;
+}
+.btn-join {
+  background: #111827;
+  color: white;
+}
+.btn-join {
+  padding: 5px 20px; 
+  background: #111827;
+  color: white;
+  border-radius: 10px;
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+/* small screens */
+@media (max-width: 640px) {
+  .reqs-box {
+    height: calc(100vh - 100px);
+  }
+}
+
+/* segmented toggle (for Open / Accepted view switches) */
+.segmented {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px;
+  margin: 2px 30px 10px; /* align with .req-card margin */
+}
+
+.chip {
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(8px);
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.chip:hover {
+  background: rgba(255,255,255,0.10);
+}
+
+.chip.active,
+.chip[aria-pressed="true"] {
+  background: #0ea5e9;  /* same family as your .tab.active */
+  border-color: #0ea5e9;
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(14,165,233,0.25);
+}
+
+/* keyboard focus */
+.chip:focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
+}
+
+.sched-row select {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px 8px;
+}
