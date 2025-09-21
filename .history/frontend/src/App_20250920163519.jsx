@@ -3,7 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState } from "react";
 
 // your components (make sure the folder name matches your project: Components vs components)
-import Hero from "./Components/Hero/Hero";
+import Hero from "./Components/Hero";
 import HeaderBar from "./Components/HeaderBar";
 import CreateRequest from "./Components/CreateRequest";
 import RequestsSection from "./Components/RequestsSection";

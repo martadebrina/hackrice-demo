@@ -247,67 +247,87 @@ async def create_request(payload: dict, user=Depends(auth_user)):
 @app.post("/requests/{rid}/accept")
 async def accept_request(rid: str, user=Depends(auth_user)):
     tutor = db.users.find_one({"auth0Sub": user.get("sub")})
-    if not tutor: raise HTTPException(400, "User not found")
+    if not tutor:
+        raise HTTPException(400, "User not found")
+
     req = db.requests.find_one({"_id": ObjectId(rid)})
-    if not req: raise HTTPException(404, "Request not found")
+    if not req:
+        raise HTTPException(404, "Request not found")
+    if req.get("status") != "open":
+        raise HTTPException(400, "Request is not open")
+
+    # 🚫 block accepting own request
     if req.get("studentId") == tutor["_id"]:
         raise HTTPException(403, "You cannot accept your own request")
 
-    link = f"https://meet.jit.si/peerfect-{rid}"
     res = db.requests.update_one(
-        {"_id": ObjectId(rid), "status": "open"},
-        {"$set": {"status": "accepted", "tutorId": tutor["_id"], "link": link, "acceptedAt": datetime.utcnow()}}
+        {"_id": req["_id"], "status": "open"},
+        {
+            "$set": {
+                "status": "accepted",
+                "tutorId": tutor["_id"],
+                "link": "https://meet.jit.si/peerfect-demo",
+            }
+        },
     )
     if not res.modified_count:
-        raise HTTPException(400, "Cannot accept (already accepted)")
-    await broadcast({"type":"request:accepted","rid":rid})
-    return {"ok": True, "link": link}
+        raise HTTPException(400, "Cannot accept (race or already accepted)")
+    await broadcast({"type": "request:accepted", "rid": rid})
+    return {"ok": True}
 
 
 # --- Complete a request (simple transfer) ---
-# /requests/{rid}/complete  ➜ only student can complete, single-shot
+# --- Complete a request (only student can complete) ---
 @app.post("/requests/{rid}/complete")
 async def complete_request(rid: str, user=Depends(auth_user)):
+    # who is calling?
     caller = db.users.find_one({"auth0Sub": user.get("sub")})
-    if not caller: raise HTTPException(400, "User not found")
+    if not caller:
+        raise HTTPException(400, "User not found")
 
-    # Atomically flip accepted ➜ completed one time only
-    r_before = db.requests.find_one_and_update(
-        {"_id": ObjectId(rid), "status": "accepted"},
-        {"$set": {"status": "completed", "completedAt": datetime.utcnow()}},
-        return_document=ReturnDocument.BEFORE,
-    )
-    if not r_before:
+    r = db.requests.find_one({"_id": ObjectId(rid)})
+    if not r or r.get("status") != "accepted":
         raise HTTPException(400, "Request is not in accepted state")
 
-    if r_before["studentId"] != caller["_id"]:
-        # roll back status if wrong caller
-        db.requests.update_one({"_id": ObjectId(rid), "status": "completed"},
-                               {"$set": {"status": "accepted"}, "$unset": {"completedAt": ""}})
-        raise HTTPException(403, "Only the student who created this request can complete it")
+    # ✅ only the creator (student) may complete
+    if r["studentId"] != caller["_id"]:
+        raise HTTPException(
+            403, "Only the student who created this request can complete it"
+        )
 
-    student = db.users.find_one({"_id": r_before["studentId"]})
-    tutor   = db.users.find_one({"_id": r_before["tutorId"]})
-    if not student or not tutor: raise HTTPException(400, "Participants missing")
+    student = db.users.find_one({"_id": r["studentId"]})
+    tutor = db.users.find_one({"_id": r["tutorId"]})
+    if not student or not tutor:
+        raise HTTPException(400, "Participants missing")
 
-    pts   = int(r_before.get("pointsOffered", 0))
+    # coerce ints
+    pts = int(r.get("pointsOffered", 0))
     s_pts = int(student.get("points", 0))
     t_pts = int(tutor.get("points", 0))
-    if pts <= 0: raise HTTPException(400, "pointsOffered must be > 0")
-    if s_pts < pts: raise HTTPException(400, "Insufficient student points")
+    if pts <= 0:
+        raise HTTPException(400, "pointsOffered must be > 0")
+    if s_pts < pts:
+        raise HTTPException(400, "Insufficient student points")
 
-    s_new, t_new = s_pts - pts, t_pts + pts
+    # transfer with explicit totals
+    s_new = s_pts - pts
+    t_new = t_pts + pts
     db.users.update_one({"_id": student["_id"]}, {"$set": {"points": s_new}})
-    db.users.update_one({"_id": tutor["_id"]},   {"$set": {"points": t_new}})
+    db.users.update_one({"_id": tutor["_id"]}, {"$set": {"points": t_new}})
+    db.requests.update_one({"_id": r["_id"]}, {"$set": {"status": "completed"}})
 
-    # (Optional) ledger row for audit
-    # db.ledger.insert_one({ ... })
-
-    await broadcast({"type":"request:completed","rid":rid})
-    await broadcast({"type":"user:points_changed"})
-
-    return {"ok": True, "studentPoints": s_new, "tutorPoints": t_new, "callerPoints": s_new}
-
+    await broadcast({"type": "request:completed", "rid": rid})
+    await broadcast({"type": "user:points_changed"})
+    # tell the caller (student) their fresh points
+    return {
+        "ok": True,
+        "transferred": pts,
+        "studentId": str(student["_id"]),
+        "tutorId": str(tutor["_id"]),
+        "studentPoints": s_new,
+        "tutorPoints": t_new,
+        "callerPoints": s_new,  # caller is the student by rule
+    }
 
 
 # Event
